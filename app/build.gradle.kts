@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "dev.mnzn.conduitandroid"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "dev.mnzn.conduitandroid"
