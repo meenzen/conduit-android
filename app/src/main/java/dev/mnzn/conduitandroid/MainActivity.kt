@@ -17,7 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -30,11 +30,19 @@ class MainActivity : ComponentActivity() {
         setContent {
             ConduitAndroidTheme {
 
-                Scaffold (
-                    bottomBar = { Navigation() },
+                var selectedItem by remember { mutableStateOf(Screen.Home) }
+                var text by remember { mutableStateOf(selectedItem.name) }
+
+                Scaffold(
+                    bottomBar = {
+                        Navigation(selectedItem, onSelectedItemChange = {
+                            selectedItem = it
+                            text = it.name
+                        })
+                    },
                     content = { innerPadding ->
                         Text(
-                            text = "Body content",
+                            text = text,
                             modifier = Modifier
                                 .padding(innerPadding)
                                 .fillMaxSize()
@@ -47,15 +55,16 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Navigation() {
-    class NavigationItem(val title: String, val icon: ImageVector)
+enum class Screen { Home, Config, Log }
 
-    var selectedItem by remember { mutableIntStateOf(0) }
+@Composable
+fun Navigation(selectedItem: Screen = Screen.Home, onSelectedItemChange: (Screen) -> Unit) {
+    class NavigationItem(val title: String, val icon: ImageVector, val screen: Screen)
+
     val items = listOf(
-        NavigationItem("Home", Icons.Filled.Home),
-        NavigationItem("Config", Icons.Filled.Settings),
-        NavigationItem("Log", Icons.Filled.Info),
+        NavigationItem("Home", Icons.Filled.Home, Screen.Home),
+        NavigationItem("Config", Icons.Filled.Settings, Screen.Config),
+        NavigationItem("Log", Icons.Filled.Info, Screen.Log),
     )
 
     NavigationBar {
@@ -63,8 +72,8 @@ fun Navigation() {
             NavigationBarItem(
                 icon = { Icon(item.icon, contentDescription = item.title) },
                 label = { Text(item.title) },
-                selected = selectedItem == index,
-                onClick = { selectedItem = index }
+                selected = selectedItem.ordinal == index,
+                onClick = { onSelectedItemChange(item.screen) }
             )
         }
     }
