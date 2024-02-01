@@ -1,6 +1,6 @@
 # Conduit Android
 
-This is a experimental app that lets you run a [Conduit](https://gitlab.com/famedly/conduit) matrix server on your Android device.
+This is an experimental app that lets you run a [Conduit](https://gitlab.com/famedly/conduit) matrix server on your Android device.
 
 ## Contributing
 
